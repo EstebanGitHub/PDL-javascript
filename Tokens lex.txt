@@ -1,0 +1,27 @@
+---Tokens---(Faltan los de grupo)
+<id,Pos_TS>
+<entero,valor>
+<cadena,lexema>
+<op_asignacion,=>
+<op_aritmetico,+>
+<op_relacional,<>
+<op_logico,&&>
+<op_asignacion,=>
+<pal_res,var>
+<pal_res,bool>
+<pal_res,string>
+<pal_res,int>
+<parentesis_entrada,_>
+<parentesis_salida,_>
+<llave_entrada,_>
+<llave_salida,_>
+<pal_res,function>
+<pal_res,return>
+<pal_res,if>
+
+
+
+
+
+
+
