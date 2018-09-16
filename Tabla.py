@@ -1,4 +1,4 @@
-from FilaTabla.py import FilaTabla
+from FilaTabla import FilaTabla
 
 
 class Tabla:

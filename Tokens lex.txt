@@ -1,11 +1,11 @@
----Tokens---(Faltan los de grupo)
+---Tokens---
 <id,Pos_TS>
 <entero,valor>
-<cadena,lexema>
+<cadena,lexema> (con comillas simples)
 <op_asignacion,=>
 <op_aritmetico,+>
 <op_relacional,<>
-<op_logico,&&>
+<op_logico,||>
 <op_asignacion,=>
 <pal_res,var>
 <pal_res,bool>
@@ -15,9 +15,18 @@
 <parentesis_salida,_>
 <llave_entrada,_>
 <llave_salida,_>
-<pal_res,function>
+<pal_res,function> (las funciones tienen su propia tabla)
 <pal_res,return>
 <pal_res,if>
+<pal_res,switch>
+<pal_res,case>
+<pal_res,print>
+<pal_res,prompt>
+<pal_res,break>
+<pal_res,default>
+<op_asignacion,&=>
+/* comentarios */
+
 
 
 
