@@ -6,7 +6,8 @@
 <op_aritmetico,+>
 <op_relacional,<>
 <op_logico,||>
-<op_asignacion,=>
+<PuntoYComa,_>
+<DosPuntos,_>
 <pal_res,var>
 <pal_res,bool>
 <pal_res,string>

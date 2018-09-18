@@ -17,11 +17,16 @@ class ALexico:
 		self.caracter=LectorArchivos.leerCaracter(self.linea)
 
 	def recorrido(self,LectorArchivos):
-		while self.linea!=None:
+		while self.linea!="":
 		    while self.caracter!='\n':
 			    print self.caracter
+			    #Por aquí tendremps que ir trasteando con los tokens
+			    
 			    self.caracter=LectorArchivos.leerCaracter(self.linea)
 		    self.linea=LectorArchivos.leerLinea()
+		    LectorArchivos.posicion=0;
+		    if self.linea !="":
+		    	self.caracter=LectorArchivos.leerCaracter(self.linea)
 		    
 
 
