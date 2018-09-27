@@ -1,11 +1,7 @@
 class Token:
 	id=''
-	value=0
-	inf=''
-	
-	
-	
-	#inf o value dependeran del tipo de informacion extra que le demos al Token
+	extra=None
+	#extra dependera del tipo de informacion extra que le demos al Token
 	
 	def __init__(self,id,extra):
 		self.id=id
@@ -13,11 +9,13 @@ class Token:
 			self.value=extra
 		elif type(extra) is str:
 			self.inf=extra
+		elif extra=="__":
+			self.extra="__"
 	
 	def getId(self):
 		return self.id
 		
-	def setID(self,id):
+	def setId(self,id):
 		self.id=id
 		
 	def getExtra(self):
@@ -28,5 +26,8 @@ class Token:
 			self.value=extra
 		elif type(extra) is str:
 			self.inf=extra
+		elif extra=="__":
+			self.extra="__"
+
 	def imprimirToken(self):
 		print ('<'+self.getId+','+str(self.getExtra)+'>')
