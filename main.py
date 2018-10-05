@@ -5,7 +5,7 @@ from LectorArchivos import LectorArchivos
 from ALexico import ALexico
 
 
-lector_prueba=LectorArchivos("ejemplo1.txt")
+lector_prueba=LectorArchivos("ejemplo2.txt")
 prueba=ALexico(lector_prueba)
 prueba.recorrido(lector_prueba)
 

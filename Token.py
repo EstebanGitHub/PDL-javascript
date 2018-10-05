@@ -1,5 +1,5 @@
 class Token:
-	id=''
+	id=""
 	extra=None
 	#extra dependera del tipo de informacion extra que le demos al Token
 	
@@ -8,7 +8,7 @@ class Token:
 		if type(extra) is int:
 			self.value=extra
 		elif type(extra) is str:
-			self.inf=extra
+			self.extra=extra
 		elif extra=="__":
 			self.extra="__"
 	
@@ -19,15 +19,19 @@ class Token:
 		self.id=id
 		
 	def getExtra(self):
-		return extra
+		return self.extra
 		
 	def setExtra(self,id):
 		if type(extra) is int:
 			self.value=extra
 		elif type(extra) is str:
-			self.inf=extra
+			self.extra=extra
 		elif extra=="__":
 			self.extra="__"
-
+	#Metodo para pruebas, para verlos por consola
 	def imprimirToken(self):
-		print ('<'+self.getId+','+str(self.getExtra)+'>')
+		print ("<"+str(self.getId())+","+str(self.getExtra())+">")
+
+	def escribirToken(self):
+		archivo=open("tokens_prac.txt","w")
+		archivo.write("<"+str(self.getId())+","+str(self.getExtra())+">")

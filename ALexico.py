@@ -12,7 +12,7 @@ class ALexico:
 	fichero_leido=None
 	linea=None
 	caracter=None
-	#La Tabla de simbolos se construirá cunado se inserte la primera fila
+	#La Tabla de simbolos se construira cunado se inserte la primera fila
 
 	def __init__(self,LectorArchivos):
 		self.linea=LectorArchivos.leerLinea()
@@ -27,10 +27,20 @@ class ALexico:
 				#Interactuamos con el caracter actual, utilizamos ord() para obetenr su valor en ASCII
 				#De momento, se consideran los espacios y saltos de linea IGNORABLES
 				#Caso comentarios
-				if(ord(self.caracter)==47 and estado==0):
+				if(ord(self.caracter)==47 and self.estado_actual==0):
+					pass
 					#Transicion a estado correspondiente
 				#Resto de casos a implementar, a la espera de un automata perfeccionado
 				#vamos a por el siguiente en bucle
+
+				#Caso =
+
+				if (ord(self.caracter)==61 and self.estado_actual==0):
+					self.estado_actual=1
+					token=Token("op_asignacion","=")
+					token.imprimirToken()
+					token.escribirToken()
+
 				self.caracter=LectorArchivos.leerCaracter(self.linea)
 			contador=contador+1	
 			LectorArchivos.posicion_caracter=0
