@@ -23,7 +23,7 @@ class ALexico:
 		contador=0
 		while contador<limite:
 			while self.caracter!='\n' and self.caracter!=None :
-				#print self.caracter
+				print self.caracter
 				#Interactuamos con el caracter actual, utilizamos ord() para obetenr su valor en ASCII
 				#De momento, se consideran los espacios y saltos de linea IGNORABLES
 				#Caso comentarios
@@ -36,7 +36,7 @@ class ALexico:
 				#Caso =
 
 				if (ord(self.caracter)==61 and self.estado_actual==0):
-					self.estado_actual=1
+					#self.estado_actual=1, innecesario ya que vamos a volver a 0
 					token=Token("op_asignacion","=")
 					token.imprimirToken()
 					token.escribirToken()

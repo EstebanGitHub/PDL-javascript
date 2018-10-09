@@ -33,5 +33,6 @@ class Token:
 		print ("<"+str(self.getId())+","+str(self.getExtra())+">")
 
 	def escribirToken(self):
-		archivo=open("tokens_prac.txt","w")
-		archivo.write("<"+str(self.getId())+","+str(self.getExtra())+">")
+		archivo=open("tokens_prac.txt","a")
+		archivo.write("<"+str(self.getId())+","+str(self.getExtra())+">"+"\n")
+		archivo.close()
