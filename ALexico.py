@@ -6,7 +6,7 @@ from LectorArchivos import LectorArchivos
 
 
 class ALexico:
-	estados=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]#Pendiente de comprobar el numero real de estados del automata
+	palabras_reservadas=["switch","case","if","return","function","break","default","int","string","bool","var","print","prompt"]
 	estado_actual=0
 	tokens=[]
 	fichero_leido=None
@@ -28,6 +28,7 @@ class ALexico:
 				#Interactuamos con el caracter actual, utilizamos ord() para obtener su valor en ASCII
 				#De momento, se consideran los espacios y saltos de linea IGNORABLES
 				#A las espera de un automata perfeccionado para definir los estados
+
 				
 				#Caso /
 				if(ord(self.caracter)==47 and self.estado_actual==0):
