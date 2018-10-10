@@ -37,9 +37,10 @@ class Tabla:
 		self.tablaPadre=tablaPadre
 
 	def esGlobal(self):
-		if self.getPadre==self:
+		if self.getPadre==None:
 			return true
-		else return false
+		else:
+			return false
 
 	def getNombre(self):
 		return self.nombre
@@ -53,7 +54,7 @@ class Tabla:
 		 + "   ATRIBUTOS :" + "\n"
 		 + "   + tipo : '" + FilaTabla.getTipo() + "'" + "\n" +
 		  "   + desplazamiento : '" + FilaTabla.getDesp() + "'" + "\n" +
-		   "-------------------------------------" )#Formato a revisar
+		   "-------------------------------------" )#Formato a priori correcto
 
 
 

@@ -1,0 +1,6 @@
+<op_asignacion,=>
+<parentesis_cierre,>
+<llave_apertura,>
+<parentesis_apertura,>
+<op_asignacion,=>
+<llave_cierre,>

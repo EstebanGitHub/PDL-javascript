@@ -9,8 +9,6 @@ class Token:
 			self.value=extra
 		elif type(extra) is str:
 			self.extra=extra
-		elif extra=="__":
-			self.extra="__"
 	
 	def getId(self):
 		return self.id

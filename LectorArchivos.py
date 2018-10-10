@@ -11,7 +11,6 @@ class LectorArchivos:
 			self.contenido=f.readlines()
 
 
-
 	def leerLinea(self):
 		if self.posicion_lineas<len(self.contenido):
 			posicion_aux=self.posicion_lineas
