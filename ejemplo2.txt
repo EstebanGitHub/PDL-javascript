@@ -1,0 +1,7 @@
+mazorca=tomate
+patatas fritas
+function arroz_con_pollo()
+{ switch
+un atra7c_on para el vinito y el cocido
+5 : arriba Espana
+patata='batata'

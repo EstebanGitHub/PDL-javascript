@@ -6,7 +6,7 @@ class Token:
 	def __init__(self,id,extra):
 		self.id=id
 		if type(extra) is int:
-			self.value=extra
+			self.extra=extra
 		elif type(extra) is str:
 			self.extra=extra
 	

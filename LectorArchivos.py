@@ -8,7 +8,7 @@ class LectorArchivos:
 	def __init__ (self,archivo):
 
 		with open(archivo) as f:
-			self.contenido=f.readlines()
+			self.contenido=f.readlines()#Devolvemos las lineas como un array
 
 
 	def leerLinea(self):
@@ -23,6 +23,9 @@ class LectorArchivos:
 			posicion_aux=self.posicion_caracter
 			self.posicion_caracter=self.posicion_caracter+1
 			return linea[posicion_aux]
+
+	def getPosicionLinea(self):
+		return self.posicion_lineas
 		
 
 			

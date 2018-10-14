@@ -2,7 +2,7 @@ from FilaTabla import FilaTabla
 
 
 class Tabla:
-	listaFilas=[]
+	listaFilas=[] #debemos identificar cada elemento con su lexema
 	tablaPadre=None
 	nombre=""
 	archivo=""
@@ -13,23 +13,26 @@ class Tabla:
 		self.nombre=nombre
 		#Vamos dejando claro el nombre y espaciamos lo suficiente
 		self.archivo=open(nombre+".txt","a")
-		self.archivo.write("CONTENIDO DE LA TABLA #" +  nombre + " :" + "\n" + "\n")
-		self.archivo.close()
+		if(tablaPadre==None):
+			self.archivo.write("CONTENIDO DE LA TABLA #" +  nombre + " :" + "\n" + "\n")
+		else:
+			self.archivo.write("TABLA DE LA FUNCION #" +  nombre + " :" + "\n" + "\n")
+		
 
 
 
 	def insertarFila(self,FilaTabla):
-		self.listaFilas.append(FilaTabla)
+		self.listaFilas.append(FilaTabla.getLexema())
 
 	
 	def eliminarFila(self,FilaTabla):
 		self.listaFilas.remove(FilaTabla)
 		
 	def buscarEnTabla(self,FilaTabla):
-		if FilaTabla in self.listaFilas:
-			return true
+		if FilaTabla.getLexema() in self.listaFilas:
+			return True
 		else:
-			return false
+			return False
 	def getPadre(self):
 		return self.tablaPadre
 
@@ -38,9 +41,9 @@ class Tabla:
 
 	def esGlobal(self):
 		if self.getPadre==None:
-			return true
+			return True
 		else:
-			return false
+			return False
 
 	def getNombre(self):
 		return self.nombre
@@ -48,12 +51,16 @@ class Tabla:
 	def setNombre(self,nombre):
 		self.nombre=nombre
 
+	def posicionEnTabla(self,FilaTabla):
+		print self.listaFilas #De apoyo, para testeos
+		print self.listaFilas.index(FilaTabla.getLexema()) #De apoyo, para testeos
+		return self.listaFilas.index(FilaTabla.getLexema())
 
 	def escrituraTabla(self,FilaTabla):
-		archivo.write("*  LEXEMA : '" + FilaTabla.getLexema() +"'" + "\n"
+		self.archivo.write("\n" +"*  LEXEMA : '" + FilaTabla.getLexema() +"'" + "\n"
 		 + "   ATRIBUTOS :" + "\n"
 		 + "   + tipo : '" + FilaTabla.getTipo() + "'" + "\n" +
-		  "   + desplazamiento : '" + FilaTabla.getDesp() + "'" + "\n" +
+		  "   + desplazamiento : '" + str(FilaTabla.getDesp()) + "'" + "\n" +
 		   "-------------------------------------" )#Formato a priori correcto
 
 

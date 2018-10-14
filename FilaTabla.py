@@ -3,9 +3,9 @@ class FilaTabla:
 	tipo=""
 	desplazamiento=0;
 	dominio=""
+	posicion=0
 	def __init__(self,lexema,dominio):
-		self.tipo=tipo
-		self.posicion=posicion
+		self.lexema=lexema
 		self.dominio=dominio
 	
 	def getTipo(self):
@@ -15,7 +15,7 @@ class FilaTabla:
 		self.tipo=tipo
 		
 	def getLexema(self):
-		return self.posicion
+		return self.lexema
 	
 	def setLexema(self, lexema):
 		self.lexema=lexema
