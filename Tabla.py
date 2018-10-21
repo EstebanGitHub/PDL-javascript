@@ -16,7 +16,7 @@ class Tabla:
 		if(tablaPadre==None):
 			self.archivo.write("CONTENIDO DE LA TABLA #" +  nombre + " :" + "\n" + "\n")
 		else:
-			self.archivo.write("TABLA DE LA FUNCION #" +  nombre + " :" + "\n" + "\n")
+			self.archivo.write("TABLA DE LA FUNCION #" +  nombre + " :" + "\n" + "\n") #Pendiente de modificar,una vez perfeccionado el sintactico
 		
 
 

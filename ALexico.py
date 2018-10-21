@@ -19,6 +19,7 @@ class ALexico:
 	reserva_otro_caracter=False
 	en_funcion=False
 	n_funciones=0
+	linea=1
 
 	
 
@@ -35,6 +36,7 @@ class ALexico:
 		limite=len(LectorArchivos.contenido)
 		contador=0
 		tabla_global=Tabla(None,"Tabla Global") #Creamos la tabla global, ya que esta minimo va a estar
+		tabla_funcion=None #Por si hay tablas de funciones
 		while contador<limite:
 			while (self.caracter!=None):
 				print self.caracter
@@ -73,6 +75,8 @@ class ALexico:
 						token.imprimirToken()
 						token.escribirToken()
 						self.tokens.encolar(token)
+						if(self.en_funcion==True):
+							self.en_funcion=False
 						
 
 					#Caso asignacion
@@ -150,7 +154,7 @@ class ALexico:
 						self.estado_actual=22
 
 					else:
-						pass
+						print "error lexico en la linea " + self.linea +": caracter no reconocible"
 						#Mensaje de error, puede que quede algun caracter pendiente
 
 
@@ -190,7 +194,7 @@ class ALexico:
 						self.estado_actual=0
 						
 					else:
-						pass
+						print "error lexico en la linea " + self.linea +": expresion no reconocible"
 						#Mensaje de error
 
 				elif(self.estado_actual==11):
@@ -205,7 +209,7 @@ class ALexico:
 						self.estado_actual=0
 						
 					else:
-						pass
+						print "error lexico en la linea " + self.linea +": expresion no reconocible"
 						#Mensaje de error
 
 
@@ -220,6 +224,7 @@ class ALexico:
 						self.estado_actual=16
 					else:
 						pass
+						print "error lexico en la linea " + self.linea +": expresion no reconocible"
 						#Mensaje de error
 
 				elif(self.estado_actual==16):
@@ -273,17 +278,22 @@ class ALexico:
 						self.lexema=self.lexema + str(self.caracter)
 					elif (self.lexema in self.palabras_reservadas):
 						if(self.lexema=="function"):
-							#Tenemos que crearle una tabla especial
-							tabla_funcion=Tabla(tabla_global,"tabla_funcion " + str(self.n_funciones+1))
-							self.n_funciones++
-							self.en_funcion=True
-							token=Token("pal_res",str(self.lexema))
-							token.imprimirToken()
-							token.escribirToken()
-							self.tokens.encolar(token)
-							self.lexema=""#Reiniciamos
-							self.estado_actual=0
-							self.reserva_otro_caracter=True
+							if(self.en_funcion==True):
+								#Mensaje de Error, no permitimos la declaracion de funciones dentro de una funcion
+								print "error lexico en la linea " + self.linea +": no se permiten declaraciones de funciones dentro de una funcion"
+								pass
+							else:
+								#Tenemos que crearle una tabla especial
+								tabla_funcion=Tabla(tabla_global,"tabla_funcion " + str(self.n_funciones+1))
+								self.n_funciones=self.n_funciones+1
+								self.en_funcion=True
+								token=Token("pal_res",str(self.lexema))
+								token.imprimirToken()
+								token.escribirToken()
+								self.tokens.encolar(token)
+								self.lexema=""#Reiniciamos
+								self.estado_actual=0
+								self.reserva_otro_caracter=True
 
 							
 						else:
@@ -295,11 +305,8 @@ class ALexico:
 							self.estado_actual=0
 							self.reserva_otro_caracter=True
 
-					
-
-
 						
-					else:
+					elif(self.en_funcion==False):
 						fila=FilaTabla(self.lexema,"Global")
 						if(tabla_global.buscarEnTabla(fila)):
 							token=Token("identificador",tabla_global.posicionEnTabla(fila))
@@ -313,6 +320,26 @@ class ALexico:
 							tabla_global.insertarFila(fila)
 							tabla_global.escrituraTabla(fila)
 							token=Token("identificador",tabla_global.posicionEnTabla(fila))
+							token.imprimirToken()
+							token.escribirToken()
+							self.tokens.encolar(token)
+							self.estado_actual=0
+							self.lexema=""#Reiniciamos
+							self.reserva_otro_caracter=True
+					else:
+						fila=FilaTabla(self.lexema,"Local")
+						if(tabla_funcion.buscarEnTabla(fila)):
+							token=Token("identificador",tabla_funcion.posicionEnTabla(fila))
+							token.imprimirToken()
+							token.escribirToken()
+							self.tokens.encolar(token)
+							self.estado_actual=0
+							self.lexema=""#Reiniciamos
+							self.reserva_otro_caracter=True
+						else:
+							tabla_funcion.insertarFila(fila)
+							tabla_funcion.escrituraTabla(fila)
+							token=Token("identificador",tabla_funcion.posicionEnTabla(fila))
 							token.imprimirToken()
 							token.escribirToken()
 							self.tokens.encolar(token)
@@ -336,8 +363,9 @@ class ALexico:
 			if (self.linea!=None):
 				self.linea=LectorArchivos.leerLinea()
 				self.caracter=LectorArchivos.leerCaracter(self.linea)
+				self.linea=self.linea+1
 
-		    
+			self.tokens.getElementos()#Para pruebas
 		    
 
 

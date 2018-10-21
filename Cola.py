@@ -18,3 +18,6 @@ class Cola:
 	def estaVacia(self):
 		return self.elementos==[]
 
+	def getElementos(self):
+		print self.elementos #Pruebas
+
