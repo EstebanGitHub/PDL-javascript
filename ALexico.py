@@ -19,7 +19,7 @@ class ALexico:
 	reserva_otro_caracter=False
 	en_funcion=False
 	n_funciones=0
-	linea=1
+	num_linea=1
 
 	
 
@@ -81,7 +81,7 @@ class ALexico:
 
 					#Caso asignacion
 					elif(ord(self.caracter)==61):
-						token=Token("op_asignacion","")
+						token=Token("op_asignacion","=")
 						token.imprimirToken()
 						token.escribirToken()
 						self.tokens.encolar(token)
@@ -152,9 +152,10 @@ class ALexico:
 					elif((ord(self.caracter)>=65 and ord(self.caracter)<=90) or (ord(self.caracter)>=97 and ord(self.caracter)<=122)):
 						self.lexema=self.caracter
 						self.estado_actual=22
-
+					elif((ord(self.caracter)==10) or (ord(self.caracter)==3) or (ord(self.caracter)==32) or (ord(self.caracter)==9)): #Saltos de linea, fin de texto, tabulaciones...
+						pass
 					else:
-						print "error lexico en la linea " + self.linea +": caracter no reconocible"
+						print "error lexico en la linea " + str(self.num_linea) +": caracter no reconocible"
 						#Mensaje de error, puede que quede algun caracter pendiente
 
 
@@ -194,7 +195,7 @@ class ALexico:
 						self.estado_actual=0
 						
 					else:
-						print "error lexico en la linea " + self.linea +": expresion no reconocible"
+						print "error lexico en la linea " + str(self.num_linea) +": expresion no reconocible"
 						#Mensaje de error
 
 				elif(self.estado_actual==11):
@@ -209,7 +210,7 @@ class ALexico:
 						self.estado_actual=0
 						
 					else:
-						print "error lexico en la linea " + self.linea +": expresion no reconocible"
+						print "error lexico en la linea " + str(self.num_linea) +": expresion no reconocible"
 						#Mensaje de error
 
 
@@ -223,8 +224,8 @@ class ALexico:
 					if(ord(self.caracter)==42):
 						self.estado_actual=16
 					else:
-						pass
-						print "error lexico en la linea " + self.linea +": expresion no reconocible"
+						
+						print "error lexico en la linea " + str(self.num_linea) +": expresion no reconocible"
 						#Mensaje de error
 
 				elif(self.estado_actual==16):
@@ -280,8 +281,8 @@ class ALexico:
 						if(self.lexema=="function"):
 							if(self.en_funcion==True):
 								#Mensaje de Error, no permitimos la declaracion de funciones dentro de una funcion
-								print "error lexico en la linea " + self.linea +": no se permiten declaraciones de funciones dentro de una funcion"
-								pass
+								print "error lexico en la linea " + str(self.num_linea) +": no se permiten declaraciones de funciones dentro de una funcion"
+								
 							else:
 								#Tenemos que crearle una tabla especial
 								tabla_funcion=Tabla(tabla_global,"tabla_funcion " + str(self.n_funciones+1))
@@ -363,7 +364,7 @@ class ALexico:
 			if (self.linea!=None):
 				self.linea=LectorArchivos.leerLinea()
 				self.caracter=LectorArchivos.leerCaracter(self.linea)
-				self.linea=self.linea+1
+				self.num_linea=self.num_linea+1
 
 			self.tokens.getElementos()#Para pruebas
 		    
