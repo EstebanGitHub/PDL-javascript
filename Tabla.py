@@ -22,14 +22,15 @@ class Tabla:
 
 
 	def insertarFila(self,FilaTabla):
-		self.listaFilas.append(FilaTabla.getLexema())
+		self.listaFilas.append(FilaTabla)
 
 	
 	def eliminarFila(self,FilaTabla):
 		self.listaFilas.remove(FilaTabla)
 		
 	def buscarEnTabla(self,FilaTabla):
-		if FilaTabla.getLexema() in self.listaFilas:
+		encontrado=False
+		if FilaTabla in self.listaFilas:
 			return True
 		else:
 			return False
@@ -53,8 +54,8 @@ class Tabla:
 
 	def posicionEnTabla(self,FilaTabla):
 		print self.listaFilas #De apoyo, para testeos
-		print self.listaFilas.index(FilaTabla.getLexema()) #De apoyo, para testeos
-		return self.listaFilas.index(FilaTabla.getLexema())
+		print self.listaFilas.index(FilaTabla) #De apoyo, para testeos
+		return self.listaFilas.index(FilaTabla)
 
 	def escrituraTabla(self,FilaTabla):#Pendiente de cambio con la informacion actualizada, de momento para testeo para asegurar la construccion correcta en cada paso
 		self.archivo.write("\n" +"*  LEXEMA : '" + FilaTabla.getLexema() +"'" + "\n"
@@ -65,6 +66,8 @@ class Tabla:
 	#para apoyo
 
 	def mostrarTabla(self):
+		for val in self.listaFilas:
+			print val.getLexema()
 		print self.listaFilas
 
 
