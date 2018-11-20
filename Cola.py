@@ -21,4 +21,4 @@ class Cola:
 	def getElementos(self):
 		print self.elementos #Pruebas
 
-
+	

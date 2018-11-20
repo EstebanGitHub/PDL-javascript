@@ -56,13 +56,16 @@ class Tabla:
 		print self.listaFilas.index(FilaTabla.getLexema()) #De apoyo, para testeos
 		return self.listaFilas.index(FilaTabla.getLexema())
 
-	def escrituraTabla(self,FilaTabla):
+	def escrituraTabla(self,FilaTabla):#Pendiente de cambio con la informacion actualizada, de momento para testeo para asegurar la construccion correcta en cada paso
 		self.archivo.write("\n" +"*  LEXEMA : '" + FilaTabla.getLexema() +"'" + "\n"
 		 + "   ATRIBUTOS :" + "\n"
 		 + "   + tipo : '" + FilaTabla.getTipo() + "'" + "\n" +
 		  "   + desplazamiento : '" + str(FilaTabla.getDesp()) + "'" + "\n" +
 		   "-------------------------------------" )#Formato a priori correcto
+	#para apoyo
 
+	def mostrarTabla(self):
+		print self.listaFilas
 
 
 

@@ -20,6 +20,9 @@ class ALexico:
 	en_funcion=False
 	n_funciones=0
 	num_linea=1
+	tabla_global=Tabla(None,"Tabla Global")
+	tabla_funcion=None
+	lista_tablas_funciones=[] 
 
 	
 
@@ -35,8 +38,6 @@ class ALexico:
 	def recorrido(self,LectorArchivos):
 		limite=len(LectorArchivos.contenido)
 		contador=0
-		tabla_global=Tabla(None,"Tabla Global") #Creamos la tabla global, ya que esta minimo va a estar
-		tabla_funcion=None #Por si hay tablas de funciones
 		while contador<limite:
 			while (self.caracter!=None):
 				print self.caracter
@@ -77,6 +78,7 @@ class ALexico:
 						self.tokens.encolar(token)
 						if(self.en_funcion==True):
 							self.en_funcion=False
+							self.lista_tablas_funciones.append(self.tabla_funcion)
 						
 
 					#Caso asignacion
@@ -285,7 +287,7 @@ class ALexico:
 								
 							else:
 								#Tenemos que crearle una tabla especial
-								tabla_funcion=Tabla(tabla_global,"tabla_funcion " + str(self.n_funciones+1))
+								self.tabla_funcion=Tabla(self.tabla_global,"tabla_funcion " + str(self.n_funciones+1))
 								self.n_funciones=self.n_funciones+1
 								self.en_funcion=True
 								token=Token("pal_res",str(self.lexema))
@@ -309,8 +311,8 @@ class ALexico:
 						
 					elif(self.en_funcion==False):
 						fila=FilaTabla(self.lexema,"Global")
-						if(tabla_global.buscarEnTabla(fila)):
-							token=Token("identificador",tabla_global.posicionEnTabla(fila))
+						if(self.tabla_global.buscarEnTabla(fila)):
+							token=Token("identificador",self.tabla_global.posicionEnTabla(fila))
 							token.imprimirToken()
 							token.escribirToken()
 							self.tokens.encolar(token)
@@ -318,9 +320,9 @@ class ALexico:
 							self.lexema=""#Reiniciamos
 							self.reserva_otro_caracter=True
 						else:
-							tabla_global.insertarFila(fila)
-							tabla_global.escrituraTabla(fila)
-							token=Token("identificador",tabla_global.posicionEnTabla(fila))
+							self.tabla_global.insertarFila(fila)
+							self.tabla_global.escrituraTabla(fila)
+							token=Token("identificador",self.tabla_global.posicionEnTabla(fila))
 							token.imprimirToken()
 							token.escribirToken()
 							self.tokens.encolar(token)
@@ -329,8 +331,8 @@ class ALexico:
 							self.reserva_otro_caracter=True
 					else:
 						fila=FilaTabla(self.lexema,"Local")
-						if(tabla_funcion.buscarEnTabla(fila)):
-							token=Token("identificador",tabla_funcion.posicionEnTabla(fila))
+						if(self.tabla_funcion.buscarEnTabla(fila)):
+							token=Token("identificador",self.tabla_funcion.posicionEnTabla(fila))
 							token.imprimirToken()
 							token.escribirToken()
 							self.tokens.encolar(token)
@@ -338,9 +340,9 @@ class ALexico:
 							self.lexema=""#Reiniciamos
 							self.reserva_otro_caracter=True
 						else:
-							tabla_funcion.insertarFila(fila)
-							tabla_funcion.escrituraTabla(fila)
-							token=Token("identificador",tabla_funcion.posicionEnTabla(fila))
+							self.tabla_funcion.insertarFila(fila)
+							self.tabla_funcion.escrituraTabla(fila)
+							token=Token("identificador",self.tabla_funcion.posicionEnTabla(fila))
 							token.imprimirToken()
 							token.escribirToken()
 							self.tokens.encolar(token)
@@ -367,6 +369,12 @@ class ALexico:
 				self.num_linea=self.num_linea+1
 
 			self.tokens.getElementos()#Para pruebas
-		    
+
+
+	def getTablaGlobal(self):
+		return self.tabla_global
+
+	def getTablasFunciones(self):
+		return self.lista_tablas_funciones
 
 
