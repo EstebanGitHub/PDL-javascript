@@ -15,5 +15,7 @@ TablasFuncionesCons=prueba_lex.getTablasFunciones()
 #Inicializacion del Sintactico, con la informacion de los tokens y las tablas para actualizarlas con la informacion correspondiente del sintactico
 prueba_sinc=ASintactico(prueba_lex.getCola(),TablaGlobalCons,TablasFuncionesCons)
 prueba_sinc.recorrido()
+print prueba_lex.getCola().mostrarPrimero().getExtra()
+print prueba_lex.getCola().desencolarPrimero().getExtra()
 
 
