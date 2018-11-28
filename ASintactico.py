@@ -12,6 +12,7 @@ class ASintactico:
 	tablas_funciones=[]
 	parse=[]
 	error=False
+	terminales=["&=","(",")","+",",",":",";","<","=","bool","break","cadena","case","default","entero","function","id","if","int","print","prompt","return","string","switch","var","{","||","}"]
 
 	
 
@@ -33,12 +34,17 @@ class ASintactico:
 
 		#Lo primero es mirar con que elemento contamos en la cola de tokensy recorrer cada token
 		#Debemos tomar los First y Follows como referenecias para saber como desplazarnos
-		while (self.cola_tokens.mostrarPrimero()!="$" and self.error==False):#Mide solo una vez?
+		while (self.cola_tokens.mostrarPrimero()!="$" and self.error==False):
+			print self.cola_gram.getElementos()
+			print self.cola_tokens.getElementos()
+			print self.cola_gram.mostrarUltimo()
+			print self.cola_tokens.mostrarPrimero().getId()
+			print self.cola_tokens.mostrarPrimero().getExtra()
 
-			if(self.cola_gram.estaVacia() and self.cola_tokens.estaVacia()==False):
-				print "algo va mal"
-				#Tenemos que pararnos a ver la condicion de parada con $
-			#Siguiendo los First y Follows, estudiamos que regla aplicamos para cada situacion
+			if(self.cola_tokens.estaVacia()):
+				print "No hay nada que leer"
+				self.error=True
+			#Siguiendo la tabla, estudiamos que regla aplicamos para cada situacion
 			elif(self.cola_gram.mostrarUltimo()=="A"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
 
@@ -57,6 +63,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="B"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -90,7 +97,7 @@ class ASintactico:
 					self.cola_tokens.desencolarPrimero()
 					self.cola_gram.desencolarUltimo()
 
-				elif(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="switch"):
+				elif(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="var"):
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar(";")
 					self.cola_gram.encolar("id")
@@ -101,9 +108,11 @@ class ASintactico:
 					self.cola_gram.desencolarUltimo()
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="C"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
+
 
 				if(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="case"):
 					self.cola_gram.desencolarUltimo()
@@ -130,6 +139,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="E"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -141,6 +151,7 @@ class ASintactico:
 					#No hemos llegado al no terminal, no desencolamos
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="E1"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -159,6 +170,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="F"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -192,6 +204,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="K"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -211,6 +224,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="L"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -226,6 +240,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="N"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -245,6 +260,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="P"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -270,6 +286,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="Q"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -288,6 +305,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="R"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -298,6 +316,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="R1"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -316,6 +335,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="S"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -369,6 +389,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="S1"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -384,7 +405,7 @@ class ASintactico:
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("E")
 					self.cola_gram.encolar("=")
-					#Hemos llegado a print, desencolamos
+					#Hemos llegado a =, desencolamos
 					self.cola_tokens.desencolarPrimero()
 					self.cola_gram.desencolarUltimo()
 
@@ -404,18 +425,21 @@ class ASintactico:
 			elif(self.cola_gram.mostrarUltimo()=="T"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
 				if(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="bool"):
+					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("bool")
 					#Hemos llegado a print, desencolamos
 					self.cola_tokens.desencolarPrimero()
 					self.cola_gram.desencolarUltimo()
 
 				elif(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="int"):
+					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("int")
 					#Hemos llegado a print, desencolamos
 					self.cola_tokens.desencolarPrimero()
 					self.cola_gram.desencolarUltimo()
 
 				elif(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="string"):
+					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("string")
 					#Hemos llegado a print, desencolamos
 					self.cola_tokens.desencolarPrimero()
@@ -423,6 +447,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="U"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -433,6 +458,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="U1"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -451,6 +477,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="V"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -487,6 +514,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="V1"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -505,6 +533,7 @@ class ASintactico:
 
 				else:
 					print "Error"
+					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="X"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -515,6 +544,18 @@ class ASintactico:
 				elif(self.cola_tokens.mostrarPrimero().getId()=="PuntoYComa"):
 					#lamda
 					self.cola_gram.desencolarUltimo()
+
+				else:
+					print "Error"
+					self.error=True;
+			elif(self.cola_gram.mostrarUltimo() in self.terminales):
+
+				print "he pasado por " + self.cola_gram.mostrarUltimo()
+
+				self.cola_tokens.desencolarPrimero()
+				self.cola_gram.desencolarUltimo()
+
+
 
 
 
