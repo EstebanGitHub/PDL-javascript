@@ -6,7 +6,7 @@ from ALexico import ALexico
 from ASintactico import ASintactico
 
 
-lector_prueba=LectorArchivos("ejemplos1.txt")
+lector_prueba=LectorArchivos("ejemplos3.txt")
 #Inicializacion del Lexico
 prueba_lex=ALexico(lector_prueba)
 prueba_lex.recorrido(lector_prueba)#Redundante?
