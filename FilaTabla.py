@@ -1,7 +1,7 @@
 class FilaTabla:
 	lexema=""
 	tipo=""
-	desplazamiento=0;
+	desplazamiento=0; #Lo obtendremos del Semantico
 	dominio=""
 	posicion=0
 	def __init__(self,lexema,dominio):

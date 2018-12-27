@@ -20,9 +20,7 @@ class ALexico:
 	en_funcion=False
 	n_funciones=0
 	num_linea=1
-	tabla_global=Tabla(None,"Tabla Global")
-	tabla_funcion=None
-	lista_tablas_funciones=[] 
+	
 
 	
 
@@ -48,76 +46,74 @@ class ALexico:
 				if(self.estado_actual==0):
 					#Caso parentesis de apertura
 					if(ord(self.caracter)==40):
-						token=Token("parentesis_apertura","")
+						token=Token("parentesis_apertura","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						
 
 					#Caso parentesis cierre
 					elif(ord(self.caracter)==41):
-						token=Token("parentesis_cierre","")
+						token=Token("parentesis_cierre","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						
 
 					#Caso llave apertura
 					elif(ord(self.caracter)==123):
-						token=Token("llave_entrada","")
+						token=Token("llave_entrada","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						
 
 					#Caso llave cierre
 					elif(ord(self.caracter)==125):
-						token=Token("llave_salida","")
+						token=Token("llave_salida","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
-						if(self.en_funcion==True):
-							self.en_funcion=False
-							self.lista_tablas_funciones.append(self.tabla_funcion)
+						
 						
 
 					#Caso asignacion
 					elif(ord(self.caracter)==61):
-						token=Token("op_asignacion","=")
+						token=Token("op_asignacion","=",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						
 
 					#Caso suma
 					elif(ord(self.caracter)==43):
-						token=Token("op_aritmetico","")
+						token=Token("op_aritmetico","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						
 
 					#Caso operador relacional: <
 					elif(ord(self.caracter)==60):
-						token=Token("op_relacional","")
+						token=Token("op_relacional","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(tokens)
 						
 
 					#Caso dos puntos
 					elif(ord(self.caracter)==58):
-						token=Token("DosPuntos","")
+						token=Token("DosPuntos","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						
 
 					#Caso Punto y Coma
 					elif(ord(self.caracter)==59):
-						token=Token("PuntoYComa","")
+						token=Token("PuntoYComa","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						
 
@@ -127,9 +123,9 @@ class ALexico:
 
 					#Caso coma
 					elif(ord(self.caracter)==44):
-						token=Token("Coma","")
+						token=Token("Coma","",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						
 
@@ -190,9 +186,9 @@ class ALexico:
 
 				elif(self.estado_actual==10):
 					if(ord(self.caracter)==124):
-						token=Token("op_logico","||")
+						token=Token("op_logico","||",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						self.estado_actual=0
 						
@@ -205,9 +201,9 @@ class ALexico:
 
 				elif(self.estado_actual==12):
 					if(self.caracter==61):
-						token=Token("op_asignacion","&=")
+						token=Token("op_asignacion","&=",self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						self.estado_actual=0
 						
@@ -246,10 +242,12 @@ class ALexico:
 				elif(self.estado_actual==18):
 					if(ord(self.caracter)>=48 and ord(self.caracter)<=57):
 						self.valor=self.valor*10 + int(self.caracter)
+						if(self.valor>32767):
+							print "error lexico en la linea " + str(self.num_linea) +": expresion entera superior al valor maximo permitido"
 					else:
-						token=Token("entero",self.valor)
+						token=Token("entero",self.valor,self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						self.valor=0 #Reiniciamos
 						self.estado_actual=0
@@ -262,9 +260,9 @@ class ALexico:
 
 				elif(self.estado_actual==20):
 					if(ord(self.caracter)==39):
-						token=Token("cadena",self.lexema)
+						token=Token("cadena",self.lexema,self.num_linea)
 						token.imprimirToken()
-						token.escribirToken()
+						#token.escribirToken()
 						self.tokens.encolar(token)
 						self.lexema="" #Reiniciamos
 						self.estado_actual=0
@@ -280,80 +278,26 @@ class ALexico:
 					if((ord(self.caracter)>=48 and ord(self.caracter)<=57) or ((ord(self.caracter)>=65 and ord(self.caracter)<=90) or (ord(self.caracter)>=97 and ord(self.caracter)<=122)) or ord(self.caracter)==95):
 						self.lexema=self.lexema + str(self.caracter)
 					elif (self.lexema in self.palabras_reservadas):
-						if(self.lexema=="function"):
-							if(self.en_funcion==True):
-								#Mensaje de Error, no permitimos la declaracion de funciones dentro de una funcion
-								print "error lexico en la linea " + str(self.num_linea) +": no se permiten declaraciones de funciones dentro de una funcion"
-								
-							else:
-								#Tenemos que crearle una tabla especial
-								self.tabla_funcion=Tabla(self.tabla_global,"tabla_funcion " + str(self.n_funciones+1))
-								self.n_funciones=self.n_funciones+1
-								self.en_funcion=True
-								token=Token("pal_res",str(self.lexema))
-								token.imprimirToken()
-								token.escribirToken()
-								self.tokens.encolar(token)
-								self.lexema=""#Reiniciamos
-								self.estado_actual=0
-								self.reserva_otro_caracter=True
-
-							
-						else:
-							token=Token("pal_res",str(self.lexema))
-							token.imprimirToken()
-							token.escribirToken()
-							self.tokens.encolar(token)
-							self.lexema=""#Reiniciamos
-							self.estado_actual=0
-							self.reserva_otro_caracter=True
-
 						
-					elif(self.en_funcion==False):
-						fila=FilaTabla(self.lexema,"Global")
-						if(self.tabla_global.buscarEnTabla(fila)):
-							token=Token("identificador",self.tabla_global.posicionEnTabla(fila))
-							token.imprimirToken()
-							token.escribirToken()
-							self.tokens.encolar(token)
-							self.estado_actual=0
-							self.lexema=""#Reiniciamos
-							self.reserva_otro_caracter=True
-						else:
-							self.tabla_global.insertarFila(fila)
-							self.tabla_global.escrituraTabla(fila)
-							token=Token("identificador",self.tabla_global.posicionEnTabla(fila))
-							token.imprimirToken()
-							token.escribirToken()
-							self.tokens.encolar(token)
-							self.estado_actual=0
-							self.lexema=""#Reiniciamos
-							self.reserva_otro_caracter=True
+						token=Token("pal_res",str(self.lexema),self.num_linea)
+						token.imprimirToken()
+						#token.escribirToken()
+						self.tokens.encolar(token)
+						self.lexema=""#Reiniciamos
+						self.estado_actual=0
+						self.reserva_otro_caracter=True
+
 					else:
-						fila=FilaTabla(self.lexema,"Local")
-						if(self.tabla_funcion.buscarEnTabla(fila)):
-							token=Token("identificador",self.tabla_funcion.posicionEnTabla(fila))
-							token.imprimirToken()
-							token.escribirToken()
-							self.tokens.encolar(token)
-							self.estado_actual=0
-							self.lexema=""#Reiniciamos
-							self.reserva_otro_caracter=True
-						else:
-							self.tabla_funcion.insertarFila(fila)
-							self.tabla_funcion.escrituraTabla(fila)
-							token=Token("identificador",self.tabla_funcion.posicionEnTabla(fila))
-							token.imprimirToken()
-							token.escribirToken()
-							self.tokens.encolar(token)
-							self.estado_actual=0
-							self.lexema=""#Reiniciamos
-							self.reserva_otro_caracter=True
+						token=Token("identificador",self.lexema,self.num_linea)
+						token.imprimirToken()
+						#token.escribirToken()
+						self.tokens.encolar(token)
+						self.estado_actual=0
+						self.lexema=""#Reiniciamos
+						self.reserva_otro_caracter=True
+	
 
 							
-
-
-
 				#Como vamos un caracter por delante, debemos evitar leer caracteres en los estados finales
 				if(self.reserva_otro_caracter==True):
 					self.reserva_otro_caracter=False
@@ -370,11 +314,5 @@ class ALexico:
 
 			self.tokens.getElementos()#Para pruebas
 
-
-	def getTablaGlobal(self):
-		return self.tabla_global
-
-	def getTablasFunciones(self):
-		return self.lista_tablas_funciones
 
 

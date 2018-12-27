@@ -16,7 +16,7 @@ class Tabla:
 		if(tablaPadre==None):
 			self.archivo.write("CONTENIDO DE LA TABLA #" +  nombre + " :" + "\n" + "\n")
 		else:
-			self.archivo.write("TABLA DE LA FUNCION #" +  nombre + " :" + "\n" + "\n") #Pendiente de modificar,una vez perfeccionado el sintactico
+			self.archivo.write("TABLA DE LA FUNCION #" +  nombre + " :" + "\n" + "\n") #Pendiente de modificar,una vez perfeccionado el sintactico y semantico
 		
 
 
@@ -29,11 +29,22 @@ class Tabla:
 		self.listaFilas.remove(FilaTabla)
 		
 	def buscarEnTabla(self,FilaTabla):
+		lexema=FilaTabla.getLexema()
 		encontrado=False
-		if FilaTabla in self.listaFilas:
-			return True
-		else:
-			return False
+		for fila in self.listaFilas:
+			if fila.getLexema()==lexema:
+				encontrado= True
+		return encontrado
+
+	def situacionLexema(self,FilaTabla):
+		lexema=FilaTabla.getLexema()
+		posicion=0
+		for fila in self.listaFilas:
+			if fila.getLexema()==lexema:
+				posicion= self.listaFilas.index(fila)
+		return posicion
+
+
 	def getPadre(self):
 		return self.tablaPadre
 
@@ -56,6 +67,10 @@ class Tabla:
 		print self.listaFilas #De apoyo, para testeos
 		print self.listaFilas.index(FilaTabla) #De apoyo, para testeos
 		return self.listaFilas.index(FilaTabla)
+
+	def getFilaTabla(self,posicion):
+		return self.listaFilas[posicion]
+
 
 	def escrituraTabla(self,FilaTabla):#Pendiente de cambio con la informacion actualizada, de momento para testeo para asegurar la construccion correcta en cada paso
 		self.archivo.write("\n" +"*  LEXEMA : '" + FilaTabla.getLexema() +"'" + "\n"
