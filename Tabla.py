@@ -79,6 +79,32 @@ class Tabla:
 		  "   + desplazamiento : '" + str(FilaTabla.getDesp()) + "'" + "\n" +
 		   "-------------------------------------" )#Formato a priori correcto
 	#para apoyo
+	def escrituraTablaArgumentos(self,FilaTabla,numero_parametros,parametro_actual,tipo_retorno,nombre_tabla):#para escribir en la tabla global el contenido de una funcion
+		if(numero_parametros==0 and parametro_actual==0):#funcion sin parametros
+			self.archivo.write("\n" +"*  LEXEMA : '" + nombre_tabla +"'" + "\n"
+		 	+ "   ATRIBUTOS :" + "\n"
+		 	+ "   + tipo : 'funcion' " + "\n" +
+		 	"     + numParam= 0")
+
+		elif(parametro_actual==1):#Solo debemos definir el tipo una vez
+			self.archivo.write("\n" +"*  LEXEMA : '" + nombre_tabla +"'" + "\n"
+		 	+ "   ATRIBUTOS :" + "\n"
+		 	+ "   + tipo : 'funcion' " + "\n" +
+		 	"     + numParam= " + str(numero_parametros)+ "\n"
+		 	"        + TipoParam" + str(parametro_actual) + ":   '" + str(FilaTabla.getTipo()) +"'"
+		 	)
+
+
+		else:#en caso de varios paramnetros
+			self.archivo.write("\n" +
+			"        + TipoParam" + str(parametro_actual) + ":   '" + str(FilaTabla.getTipo()) +"'")
+
+		if(numero_parametros==parametro_actual): #cierre
+			self.archivo.write("\n" + "           + TipoRetorno:" + str(tipo_retorno) + 
+			"\n" +  "-------------------------------------" )
+
+
+
 
 	def mostrarTabla(self):
 		for val in self.listaFilas:

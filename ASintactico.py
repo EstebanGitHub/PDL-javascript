@@ -211,7 +211,7 @@ class ASintactico:
 					print "Error"
 			elif(self.cola_gram.mostrarUltimo()=="H"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
-				if(self.cola_tokens.mostrarPrimero().getId() in ["int","bool","string"]):
+				if(self.cola_tokens.mostrarPrimero().getExtra() in ["int","bool","string"]):
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("T")
 					self.parse.append("31")

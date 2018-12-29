@@ -6,12 +6,13 @@ from ALexico import ALexico
 from ASintactico import ASintactico
 
 class ASemantico:
-	#Aunque inicialmente las tabalas se desarrollaban inicialmente en el analizador lexico, vamos a llevar todo el desarrollo de las tablas al analizador semantico por comodidad
+	#Aunque inicialmente las tablas se desarrollaban inicialmente en el analizador lexico, vamos a llevar todo el desarrollo de las tablas al analizador semantico por comodidad
 	#Aqui debemos hacer comprobaciones como los tipos y las zonas en las que estamos
 	#Zonas
 	zona_funcion=False
 	zona_switch=False
 	zona_declaracion=False
+	zona_argumentos=False
 	#Tipos (int,boolean, string, ok o error)
 	id_tipo=""
 	A_tipo=""
@@ -47,6 +48,7 @@ class ASemantico:
 	desp_funcion=0
 	desp_actual=0
 	id_indice=""
+	argumentos_funcion=[]
 	
 	#Debido a la naturaleza de nuestra implementacion, vamos a volver a recorrer la tabla, pero esta vez vamos a fijarnos en los tipos y las zonas, de la misma forma que completaremos la tabla
 	
@@ -88,6 +90,8 @@ class ASemantico:
 					self.tabla_actual.insertarFila(elemento)
 					self.id_indice.setExtra(self.tabla_actual.posicionEnTabla(elemento))	
 					self.id_indice.escribirToken()#Ya podemos escribirlo
+					if(self.zona_argumentos==True):
+						self.argumentos_funcion.append(elemento)
 					self.tabla_actual.escrituraTabla(elemento)#escribimos en la tabla
 				else:
 					id_tipo="Error"
@@ -225,6 +229,7 @@ class ASemantico:
 			self.zona_funcion=True
 
 		elif(codigo_semantico=="SEM23"):#Creacion tabla funcion
+			self.zona_argumentos=True
 			self.tabla_funcion=Tabla(self.tabla_global,"TABLA_FUNCION_"+self.id_indice.getExtra())#Creamos nueva tabla funcion
 			#Preparamos el terreno para trabajar con ella, guardando el estado de la tabla global
 			self.tabla_global=self.tabla_actual
@@ -278,6 +283,16 @@ class ASemantico:
 		elif(codigo_semantico=="SEM32"):
 			self.V_tipo=self.E_tipo
 
+		elif(codigo_semantico=="SEM33"):#Reunidos los argumentos
+			self.zona_argumentos=False
+			for argumento in self.argumentos_funcion:
+				self.tabla_global.escrituraTablaArgumentos(argumento,len(self.argumentos_funcion),self.argumentos_funcion.index(argumento)+1,self.H_tipo,self.tabla_actual.getNombre()) #+1 para controlar el caso de que no existan argumentos
+
+
+			
+
+
+
 
 
 
@@ -314,6 +329,7 @@ class ASemantico:
 					#No hemos llegado al token, no desencolamos en la cadena
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("K")
+					self.cola_gram.encolar("SEM2")
 					self.cola_gram.encolar("id")
 					self.cola_gram.encolar("T")
 					self.parse.append("33")
@@ -466,10 +482,12 @@ class ASemantico:
 					self.cola_gram.encolar("}")
 					self.cola_gram.encolar("N")
 					self.cola_gram.encolar("{")
+					self.cola_gram.encolar("SEM33")
 					self.cola_gram.encolar(")")
 					self.cola_gram.encolar("A")
 					self.cola_gram.encolar("SEM23")
 					self.cola_gram.encolar("(")
+					self.cola_gram.encolar("SEM33")
 					self.cola_gram.encolar("id")
 					self.cola_gram.encolar("H")
 					self.cola_gram.encolar("SEM22")
@@ -484,7 +502,7 @@ class ASemantico:
 					print "Error"
 			elif(self.cola_gram.mostrarUltimo()=="H"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
-				if(self.cola_tokens.mostrarPrimero().getId() in ["int","bool","string"]):
+				if(self.cola_tokens.mostrarPrimero().getExtra() in ["int","bool","string"]):
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("SEM19")
 					self.cola_gram.encolar("T")
@@ -510,6 +528,7 @@ class ASemantico:
 				elif(self.cola_tokens.mostrarPrimero().getId()=="Coma"):
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("K")
+					self.cola_gram.encolar("SEM2")
 					self.cola_gram.encolar("id")
 					self.cola_gram.encolar("T")
 					self.cola_gram.encolar(",")
