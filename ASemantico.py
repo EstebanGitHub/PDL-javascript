@@ -94,7 +94,7 @@ class ASemantico:
 						self.argumentos_funcion.append(elemento)
 					self.tabla_actual.escrituraTabla(elemento)#escribimos en la tabla
 				else:
-					id_tipo="Error"
+					self.id_tipo="Error"
 					print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : variable ya declarada"
 					self.error=True
 
@@ -144,9 +144,10 @@ class ASemantico:
 				self.tabla_global.insertarFila(elemento)#insertamos en la tabla global
 				self.id_tipo="int"#el tipo predeterminado, int
 			elif(self.tabla_actual.buscarEnTabla(elemento)==True):#esta declarada en la tabla actual
-				self.id_indice.setExtra(self.tabla_actual.posicionEnTabla(elemento))#ajustamos token
+				self.id_indice.setExtra(self.tabla_actual.situacionLexema(elemento))#ajustamos token
 				self.id_indice.escribirToken()#escribimos token
-				self.id_tipo=fila.getTipo()
+				self.id_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
+				print self.id_tipo
 
 		elif(codigo_semantico=="SEM11"):
 			if(self.zona_funcion==False):
@@ -232,6 +233,18 @@ class ASemantico:
 			self.zona_argumentos=True
 			self.tabla_funcion=Tabla(self.tabla_global,"TABLA_FUNCION_"+self.id_indice.getExtra())#Creamos nueva tabla funcion
 			#Preparamos el terreno para trabajar con ella, guardando el estado de la tabla global
+			elemento=FilaTabla(self.id_indice.getExtra(),self.tabla_actual.getNombre())#Metemos el token en la tabla y comenzamos a meter datos
+			if(self.tabla_actual.buscarEnTabla(elemento)==False):#No estaba ya declarado
+					elemento.setTipo(self.id_tipo)
+					
+					self.tabla_actual.insertarFila(elemento)
+					self.id_indice.setExtra(self.tabla_actual.posicionEnTabla(elemento))	
+					self.id_indice.escribirToken()#Ya podemos escribirlo
+			else:
+				self.id_tipo="Error"
+				print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : funcion ya declarada"
+				self.error=True
+
 			self.tabla_global=self.tabla_actual
 			self.tabla_actual=self.tabla_funcion
 			self.desp=self.desp_actual
@@ -278,7 +291,11 @@ class ASemantico:
 				self.error=True
 
 		elif(codigo_semantico=="SEM31"):
+			elemento=FilaTabla(self.id_indice.getExtra(),self.tabla_actual.getNombre())
+			print self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
+			self.id_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
 			self.V_tipo=self.id_tipo
+			print self.V_tipo
 
 		elif(codigo_semantico=="SEM32"):
 			self.V_tipo=self.E_tipo
@@ -482,12 +499,11 @@ class ASemantico:
 					self.cola_gram.encolar("}")
 					self.cola_gram.encolar("N")
 					self.cola_gram.encolar("{")
-					self.cola_gram.encolar("SEM33")
 					self.cola_gram.encolar(")")
-					self.cola_gram.encolar("A")
-					self.cola_gram.encolar("SEM23")
-					self.cola_gram.encolar("(")
 					self.cola_gram.encolar("SEM33")
+					self.cola_gram.encolar("A")
+					self.cola_gram.encolar("(")
+					self.cola_gram.encolar("SEM23")
 					self.cola_gram.encolar("id")
 					self.cola_gram.encolar("H")
 					self.cola_gram.encolar("SEM22")
@@ -694,6 +710,7 @@ class ASemantico:
 					self.cola_gram.encolar("SEM10")
 					self.cola_gram.encolar("id")
 					#Hemos llegado a id, desencolamos
+					self.id_indice=self.cola_tokens.mostrarPrimero()
 					token=self.cola_tokens.desencolarPrimero()
 					token.escribirToken()
 					self.cola_gram.desencolarUltimo()
@@ -893,7 +910,9 @@ class ASemantico:
 					self.cola_gram.encolar("V1")
 					self.cola_gram.encolar("identificador")
 					#Hemos llegado a print, desencolamos
+					self.id_indice=self.cola_tokens.mostrarPrimero()
 					token=self.cola_tokens.desencolarPrimero()
+					self.gestionSemantica(self.cola_gram.mostrarUltimo())
 					token.escribirToken()
 					self.cola_gram.desencolarUltimo()
 					self.parse.append("46")
