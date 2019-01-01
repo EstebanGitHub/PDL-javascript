@@ -12,6 +12,7 @@ class Tabla:
 		self.tablaPadre=tablaPadre
 		self.nombre=nombre
 		#Vamos dejando claro el nombre y espaciamos lo suficiente
+		self.listaFilas=[]
 		self.archivo=open(nombre+".txt","a")
 		if(tablaPadre==None):
 			self.archivo.write("CONTENIDO DE LA TABLA #" +  nombre + " :" + "\n" + "\n")

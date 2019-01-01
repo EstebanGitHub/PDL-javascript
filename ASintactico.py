@@ -127,6 +127,7 @@ class ASintactico:
 
 				if(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="case"):
 					self.cola_gram.desencolarUltimo()
+					self.cola_gram.encolar("C")
 					self.cola_gram.encolar("S")
 					self.cola_gram.encolar(":")
 					self.cola_gram.encolar("entero")

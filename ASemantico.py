@@ -141,8 +141,16 @@ class ASemantico:
 			elemento=FilaTabla(self.id_indice.getExtra(),self.tabla_actual.getNombre())
 			if((self.tabla_actual.buscarEnTabla(elemento)==False) and (self.tabla_global.buscarEnTabla(elemento)==False)):#no estaba declarado
 				elemento.setTipo("int")
+				elemento.setDesp(self.desp_actual)
+				self.desp_actual=self.desp_actual+16#Caracteristicas al ser entero
 				self.tabla_global.insertarFila(elemento)#insertamos en la tabla global
 				self.id_tipo="int"#el tipo predeterminado, int
+				self.id_indice.setExtra(self.tabla_actual.situacionLexema(elemento))#ajustamos token
+				self.id_indice.escribirToken()#escribimos token
+				self.id_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
+				self.tabla_actual.escrituraTabla(elemento)#escribimos en la tabla
+
+
 			elif(self.tabla_actual.buscarEnTabla(elemento)==True):#esta declarada en la tabla actual
 				self.id_indice.setExtra(self.tabla_actual.situacionLexema(elemento))#ajustamos token
 				self.id_indice.escribirToken()#escribimos token
@@ -206,6 +214,13 @@ class ASemantico:
 				self.C_tipo="Error"
 				print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : case inesperado fuera de un switch"
 				self.error=True
+			if(self.cola_tokens.mostrarPrimero().getId()=="entero"):
+				self.C_tipo="ok"
+			else:
+				self.C_tipo="Error"
+				print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : los case deben tomar valores enteros"
+				self.error=True
+
 
 		elif(codigo_semantico=="SEM18"):
 			if (self.zona_switch==True):
@@ -236,7 +251,7 @@ class ASemantico:
 			elemento=FilaTabla(self.id_indice.getExtra(),self.tabla_actual.getNombre())#Metemos el token en la tabla y comenzamos a meter datos
 			if(self.tabla_actual.buscarEnTabla(elemento)==False):#No estaba ya declarado
 					elemento.setTipo(self.id_tipo)
-					
+					print self.tabla_actual.getNombre()
 					self.tabla_actual.insertarFila(elemento)
 					self.id_indice.setExtra(self.tabla_actual.posicionEnTabla(elemento))	
 					self.id_indice.escribirToken()#Ya podemos escribirlo
@@ -247,6 +262,7 @@ class ASemantico:
 
 			self.tabla_global=self.tabla_actual
 			self.tabla_actual=self.tabla_funcion
+			print self.tabla_actual.getNombre()
 			self.desp=self.desp_actual
 			self.desp_funcion=0
 			self.desp_actual=self.desp_funcion
@@ -304,6 +320,7 @@ class ASemantico:
 			self.zona_argumentos=False
 			for argumento in self.argumentos_funcion:
 				self.tabla_global.escrituraTablaArgumentos(argumento,len(self.argumentos_funcion),self.argumentos_funcion.index(argumento)+1,self.H_tipo,self.tabla_actual.getNombre()) #+1 para controlar el caso de que no existan argumentos
+			self.argumentos_funcion=[]#reiniciamos para futuras funciones
 
 
 			
@@ -422,6 +439,7 @@ class ASemantico:
 
 				if(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="case"):
 					self.cola_gram.desencolarUltimo()
+					self.cola_gram.encolar("C")
 					self.cola_gram.encolar("S")
 					self.cola_gram.encolar(":")
 					self.cola_gram.encolar("entero")
@@ -606,6 +624,9 @@ class ASemantico:
 					print "Fin de cadena"
 					self.parse.append("3")
 					self.fin = True
+					self.tabla_global.mostrarTabla()
+					self.tabla_actual.mostrarTabla()
+					self.tabla_funcion.mostrarTabla()
 
 				
 				elif(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra() in ["break","if","print","prompt","return","switch","var"]):
@@ -712,7 +733,7 @@ class ASemantico:
 					#Hemos llegado a id, desencolamos
 					self.id_indice=self.cola_tokens.mostrarPrimero()
 					token=self.cola_tokens.desencolarPrimero()
-					token.escribirToken()
+					#token.escribirToken()
 					self.cola_gram.desencolarUltimo()
 					self.parse.append("11")
 
@@ -913,7 +934,7 @@ class ASemantico:
 					self.id_indice=self.cola_tokens.mostrarPrimero()
 					token=self.cola_tokens.desencolarPrimero()
 					self.gestionSemantica(self.cola_gram.mostrarUltimo())
-					token.escribirToken()
+					#token.escribirToken()
 					self.cola_gram.desencolarUltimo()
 					self.parse.append("46")
 
