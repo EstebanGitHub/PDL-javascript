@@ -8,7 +8,10 @@ from ASemantico import ASemantico
 import copy
 
 
-lector_prueba=LectorArchivos("ejemplosem5.txt")
+
+
+
+lector_prueba=LectorArchivos("ejemplofinal3-bien.txt")
 #Inicializacion del Lexico
 prueba_lex=ALexico(lector_prueba)
 prueba_lex.recorrido(lector_prueba)#Redundante?

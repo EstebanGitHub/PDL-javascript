@@ -105,6 +105,7 @@ class ASemantico:
 
 
 		elif(codigo_semantico=="SEM3"):
+			print self.E_tipo
 			if(self.E_tipo=="bool"):
 				B_tipo="ok"
 			else:
@@ -190,6 +191,8 @@ class ASemantico:
 				self.error=True
 
 		elif(codigo_semantico=="SEM14"):
+			print self.E_tipo
+			print self.id_tipo
 			if(self.E_tipo == self.id_tipo):
 				self.S1_tipo="ok"
 			else:
@@ -289,6 +292,7 @@ class ASemantico:
 
 		elif(codigo_semantico=="SEM28"):
 			if(self.U_tipo=="int" and self.R_tipo=="int"):
+				self.R_tipo="bool"
 				self.R1_tipo="ok"
 			else:
 				self.R1_tipo="error"
@@ -309,9 +313,24 @@ class ASemantico:
 		elif(codigo_semantico=="SEM31"):
 			elemento=FilaTabla(self.id_indice.getExtra(),self.tabla_actual.getNombre())
 			print self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
-			self.id_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
-			self.V_tipo=self.id_tipo
-			print self.V_tipo
+			
+			if((self.tabla_actual.buscarEnTabla(elemento)==False) and (self.tabla_global.buscarEnTabla(elemento)==False)):#no estaba declarado
+				elemento.setTipo("int")
+				elemento.setDesp(self.desp_actual)
+				self.desp_actual=self.desp_actual+16#Caracteristicas al ser entero
+				self.tabla_global.insertarFila(elemento)#insertamos en la tabla global
+				self.id_indice.setExtra(self.tabla_actual.situacionLexema(elemento))#ajustamos token
+				self.id_indice.escribirToken()#escribimos token
+				self.tabla_actual.escrituraTabla(elemento)#escribimos en la tabla
+				self.V_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
+				print self.V_tipo
+
+
+			elif(self.tabla_actual.buscarEnTabla(elemento)==True):#esta declarada en la tabla actual
+				self.id_indice.setExtra(self.tabla_actual.situacionLexema(elemento))#ajustamos token
+				self.id_indice.escribirToken()#escribimos token
+				self.V_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
+				print self.V_tipo
 
 		elif(codigo_semantico=="SEM32"):
 			self.V_tipo=self.E_tipo
@@ -353,7 +372,7 @@ class ASemantico:
 			elif(self.cola_gram.mostrarUltimo()=="A"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
 
-				if(self.cola_tokens.mostrarPrimero().getId()=="parentesis_cierre"):
+				if(self.cola_tokens.mostrarPrimero().getId()=="parentesis_apertura"):
 					#lambda
 					self.cola_gram.desencolarUltimo()
 					self.parse.append("34")
@@ -376,7 +395,7 @@ class ASemantico:
 			elif(self.cola_gram.mostrarUltimo()=="B"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
 
-				if((self.cola_tokens.mostrarPrimero().getId()=="pal_res" and (self.cola_tokens.mostrarPrimero().getExtra() in ["break","print","prompt"])) or self.cola_tokens.mostrarPrimero().getId()=="identificador" ):
+				if((self.cola_tokens.mostrarPrimero().getId()=="pal_res" and (self.cola_tokens.mostrarPrimero().getExtra() in ["break","print","prompt","return"])) or self.cola_tokens.mostrarPrimero().getId()=="identificador" ):
 					#No hemos llegado al token, no desencolamos en la cadena
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("SEM6")
@@ -650,7 +669,7 @@ class ASemantico:
 
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True
 
 			elif(self.cola_gram.mostrarUltimo()=="Q"):
@@ -672,7 +691,7 @@ class ASemantico:
 					self.parse.append("27")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="R"):
@@ -685,7 +704,7 @@ class ASemantico:
 					self.parse.append("40")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="R1"):
@@ -708,7 +727,7 @@ class ASemantico:
 					self.parse.append("42")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="S"):
@@ -777,7 +796,7 @@ class ASemantico:
 					self.parse.append("12")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="S1"):
@@ -817,7 +836,7 @@ class ASemantico:
 
 				else:
 					self.error=True;
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 
 			elif(self.cola_gram.mostrarUltimo()=="T"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
@@ -852,7 +871,7 @@ class ASemantico:
 					self.parse.append("10")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="U"):
@@ -865,7 +884,7 @@ class ASemantico:
 					self.parse.append("43")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="U1"):
@@ -888,7 +907,7 @@ class ASemantico:
 					self.parse.append("45")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="V"):
@@ -961,7 +980,7 @@ class ASemantico:
 					self.parse.append("51")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="X"):
@@ -978,7 +997,7 @@ class ASemantico:
 					self.parse.append("20")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 			elif(self.cola_gram.mostrarUltimo() in self.terminales):
 

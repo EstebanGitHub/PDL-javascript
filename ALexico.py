@@ -98,7 +98,7 @@ class ALexico:
 						token=Token("op_relacional","",self.num_linea)
 						token.imprimirToken()
 						#token.escribirToken()
-						self.tokens.encolar(tokens)
+						self.tokens.encolar(token)
 						
 
 					#Caso dos puntos

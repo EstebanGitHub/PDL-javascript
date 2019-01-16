@@ -8,7 +8,6 @@ class ASintactico:
 	#Nuestro analizador es descendiente por tablas
 	cola_tokens=Cola()#Cola de los tokens, vamos a coger la Cola de la que ha generado el Lexico
 	cola_gram=Cola()#Cola de la situacion actual
-	tabla_global=Tabla(None,"TABLA_BASE")#Estado actual de la tabla global, ahora trabajaremos con ella
 	parse=[]
 	error=False
 	terminales=["&=","(",")","+",",",":",";","<","=","bool","break","cadena","case","default","entero","function","id","if","int","print","prompt","return","string","switch","var","{","||","}"]
@@ -27,6 +26,7 @@ class ASintactico:
 			f.write("Descendente ")
 			for numero in self.parse:
 				f.write(numero + " ")
+
 
 	#Tenemos que construir una nueva gramatica que realice el comportamiento de un analizador sintactico, debido a que su gramatica es de tipo 2, tenemos que controlar en todo momento en que situacion estamos
 	#Aqui ya tenemos la cola por defecto y ya no tenemos que leer nada
@@ -68,13 +68,13 @@ class ASintactico:
 					#Insertamos los elementos al reves para respetar el formato de Cola creado para ALexico
 
 				else:
-					print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : se esperaba una definicion de tipo" 
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : se esperaba una definicion de tipo" 
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="B"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
 
-				if((self.cola_tokens.mostrarPrimero().getId()=="pal_res" and (self.cola_tokens.mostrarPrimero().getExtra() in ["break","print","prompt"])) or self.cola_tokens.mostrarPrimero().getId()=="identificador" ):
+				if((self.cola_tokens.mostrarPrimero().getId()=="pal_res" and (self.cola_tokens.mostrarPrimero().getExtra() in ["break","print","prompt","return"])) or self.cola_tokens.mostrarPrimero().getId()=="identificador" ):
 					#No hemos llegado al token, no desencolamos en la cadena
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar("S")
@@ -117,8 +117,9 @@ class ASintactico:
 					self.cola_tokens.desencolarPrimero()
 					self.cola_gram.desencolarUltimo()
 					self.parse.append("4")
+
 				else:
-					print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : se esperaba una declaracion o sentencia"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : se esperaba una declaracion o sentencia"
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="C"):
@@ -153,7 +154,7 @@ class ASintactico:
 					self.parse.append("23")
 
 				else:
-					print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : sintaxis no permitida dentro de un switch"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : sintaxis no permitida dentro de un switch"
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="E"):
@@ -166,7 +167,7 @@ class ASintactico:
 					self.parse.append("37")
 					#No hemos llegado al no terminal, no desencolamos
 				else:
-					print "Error"
+					print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="E1"):
@@ -187,7 +188,7 @@ class ASintactico:
 					self.parse.append("38")
 
 				else:
-					print "Error en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : expresion incompleta"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea()) + " : expresion incompleta"
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="F"):
@@ -209,7 +210,7 @@ class ASintactico:
 					self.parse.append("28")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 			elif(self.cola_gram.mostrarUltimo()=="H"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
 				if(self.cola_tokens.mostrarPrimero().getExtra() in ["int","bool","string"]):
@@ -224,7 +225,7 @@ class ASintactico:
 					self.parse.append("32")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="K"):
@@ -246,7 +247,7 @@ class ASintactico:
 					self.parse.append("35")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="L"):
@@ -264,7 +265,7 @@ class ASintactico:
 					self.parse.append("25")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="N"):
@@ -287,7 +288,7 @@ class ASintactico:
 					self.parse.append("30")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="P"):
@@ -320,7 +321,7 @@ class ASintactico:
 
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True
 
 			elif(self.cola_gram.mostrarUltimo()=="Q"):
@@ -341,7 +342,7 @@ class ASintactico:
 					self.parse.append("27")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="R"):
@@ -353,7 +354,7 @@ class ASintactico:
 					self.parse.append("40")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="R1"):
@@ -374,7 +375,7 @@ class ASintactico:
 					self.parse.append("42")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="S"):
@@ -433,7 +434,7 @@ class ASintactico:
 					self.parse.append("12")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="S1"):
@@ -497,7 +498,7 @@ class ASintactico:
 					self.parse.append("10")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="U"):
@@ -509,7 +510,7 @@ class ASintactico:
 					self.parse.append("43")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="U1"):
@@ -530,7 +531,7 @@ class ASintactico:
 					self.parse.append("45")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="V"):
@@ -571,7 +572,7 @@ class ASintactico:
 					self.parse.append("46")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="V1"):
@@ -592,7 +593,7 @@ class ASintactico:
 					self.parse.append("51")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 
 			elif(self.cola_gram.mostrarUltimo()=="X"):
@@ -608,7 +609,7 @@ class ASintactico:
 					self.parse.append("20")
 
 				else:
-					print "Error"
+					print "Error sintactico en la linea " + str(self.cola_tokens.mostrarPrimero().getLinea())
 					self.error=True;
 			elif(self.cola_gram.mostrarUltimo() in self.terminales):
 

@@ -17,7 +17,7 @@ class Tabla:
 		if(tablaPadre==None):
 			self.archivo.write("CONTENIDO DE LA TABLA #" +  nombre + " :" + "\n" + "\n")
 		else:
-			self.archivo.write("TABLA DE LA FUNCION #" +  nombre + " :" + "\n" + "\n") #Pendiente de modificar,una vez perfeccionado el sintactico y semantico
+			self.archivo.write("TABLA DE LA FUNCION #" +  nombre [14:] + " :" + "\n" + "\n") #[14:] Para tomar solo el nombre
 		
 
 
@@ -79,16 +79,16 @@ class Tabla:
 		 + "   + tipo : '" + FilaTabla.getTipo() + "'" + "\n" +
 		  "   + desplazamiento : '" + str(FilaTabla.getDesp()) + "'" + "\n" +
 		   "-------------------------------------" )#Formato a priori correcto
-	#para apoyo
+
 	def escrituraTablaArgumentos(self,FilaTabla,numero_parametros,parametro_actual,tipo_retorno,nombre_tabla):#para escribir en la tabla global el contenido de una funcion
 		if(numero_parametros==0 and parametro_actual==0):#funcion sin parametros
-			self.archivo.write("\n" +"*  LEXEMA : '" + nombre_tabla +"'" + "\n"
+			self.archivo.write("\n" +"*  LEXEMA : '" + nombre_tabla[14:] +"'" + "\n"
 		 	+ "   ATRIBUTOS :" + "\n"
 		 	+ "   + tipo : 'funcion' " + "\n" +
 		 	"     + numParam= 0")
 
 		elif(parametro_actual==1):#Solo debemos definir el tipo una vez
-			self.archivo.write("\n" +"*  LEXEMA : '" + nombre_tabla +"'" + "\n"
+			self.archivo.write("\n" +"*  LEXEMA : '" + nombre_tabla[14:] +"'" + "\n"
 		 	+ "   ATRIBUTOS :" + "\n"
 		 	+ "   + tipo : 'funcion' " + "\n" +
 		 	"     + numParam= " + str(numero_parametros)+ "\n"
@@ -101,12 +101,12 @@ class Tabla:
 			"        + TipoParam" + str(parametro_actual) + ":   '" + str(FilaTabla.getTipo()) +"'")
 
 		if(numero_parametros==parametro_actual): #cierre
-			self.archivo.write("\n" + "           + TipoRetorno:" + str(tipo_retorno) + 
-			"\n" +  "-------------------------------------" )
+			self.archivo.write("\n" + "           + TipoRetorno: '" + str(tipo_retorno) + 
+			"' \n" +  "-------------------------------------" )
 
 
 
-
+	#para apoyo
 	def mostrarTabla(self):
 		for val in self.listaFilas:
 			print val.getLexema()
