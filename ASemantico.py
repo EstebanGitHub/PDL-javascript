@@ -67,7 +67,6 @@ class ASemantico:
 	def gestionSemantica(self, codigo_semantico):
 		if(codigo_semantico=="SEM1"):#Entrada a declaracion de variable
 			self.zona_switch=False
-			self.zona_funcion=False
 			self.zona_declaracion=True
 
 		elif(codigo_semantico=="SEM2"):#Declaracion de variable
@@ -157,6 +156,11 @@ class ASemantico:
 				self.id_indice.escribirToken()#escribimos token
 				self.id_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
 				print self.id_tipo
+			elif(self.tabla_global.buscarEnTabla(elemento)==True):#esta declarada en la tabla global, se usa para la recursividad de funciones, ya que la funcion se declara en global
+				self.id_indice.setExtra(self.tabla_global.situacionLexema(elemento))#ajustamos token
+				self.id_indice.escribirToken()#escribimos token
+				self.id_tipo=self.tabla_global.getFilaTabla(self.tabla_global.situacionLexema(elemento)).getTipo()
+				print self.id_tipo
 
 		elif(codigo_semantico=="SEM11"):
 			if(self.zona_funcion==False):
@@ -173,8 +177,22 @@ class ASemantico:
 				self.error=True
 
 		elif(codigo_semantico=="SEM12"):
-			fila=self.tabla_actual.getFilaTabla(self.id_indice)
-			self.id_tipo=fila.getTipo()
+			elemento=FilaTabla(self.id_indice.getExtra(),self.tabla_actual.getNombre())
+			if((self.tabla_actual.buscarEnTabla(elemento)==False) and (self.tabla_global.buscarEnTabla(elemento)==False)):#no estaba declarado
+				elemento.setTipo("int")
+				elemento.setDesp(self.desp_actual)
+				self.desp_actual=self.desp_actual+16#Caracteristicas al ser entero
+				self.tabla_global.insertarFila(elemento)#insertamos en la tabla global
+				self.id_tipo="int"#el tipo predeterminado, int
+				self.id_indice.setExtra(self.tabla_actual.situacionLexema(elemento))#ajustamos token
+				self.id_indice.escribirToken()#escribimos token
+				self.id_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
+				self.tabla_actual.escrituraTabla(elemento)#escribimos en la tabla
+			elif(self.tabla_actual.buscarEnTabla(elemento)==True):#esta declarada en la tabla actual
+				self.id_indice.setExtra(self.tabla_actual.situacionLexema(elemento))#ajustamos token
+				self.id_indice.escribirToken()#escribimos token
+				self.id_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
+				print self.id_tipo
 			if((self.id_tipo=="int") or (self.id_tipo=="string")):
 				self.S_tipo="ok"
 			else:
@@ -271,7 +289,7 @@ class ASemantico:
 			self.desp_actual=self.desp_funcion
 
 		elif(codigo_semantico=="SEM24"): #fin de funcion
-			zona_funcion=False
+			self.zona_funcion=False
 			#volvemos al estado de la tabla global
 			self.tabla_actual=self.tabla_global
 			self.desp_actual=self.desp
@@ -326,10 +344,15 @@ class ASemantico:
 				print self.V_tipo
 
 
-			elif(self.tabla_actual.buscarEnTabla(elemento)==True):#esta declarada en la tabla actual
+			elif(self.tabla_actual.esGlobal()==False and self.tabla_actual.buscarEnTabla(elemento)==True):#esta declarada en la tabla actual, que no es la global
 				self.id_indice.setExtra(self.tabla_actual.situacionLexema(elemento))#ajustamos token
 				self.id_indice.escribirToken()#escribimos token
 				self.V_tipo=self.tabla_actual.getFilaTabla(self.tabla_actual.situacionLexema(elemento)).getTipo()
+				print self.V_tipo
+			elif(self.tabla_actual.esGlobal()==False and self.tabla_global.buscarEnTabla(elemento)==True):#No esta declarado en la tabla actual, pero si en el dominio global
+				self.id_indice.setExtra(self.tabla_global.situacionLexema(elemento))#ajustamos token
+				self.id_indice.escribirToken()#escribimos token
+				self.V_tipo=self.tabla_global.getFilaTabla(self.tabla_global.situacionLexema(elemento)).getTipo()
 				print self.V_tipo
 
 		elif(codigo_semantico=="SEM32"):
@@ -337,8 +360,12 @@ class ASemantico:
 
 		elif(codigo_semantico=="SEM33"):#Reunidos los argumentos
 			self.zona_argumentos=False
-			for argumento in self.argumentos_funcion:
-				self.tabla_global.escrituraTablaArgumentos(argumento,len(self.argumentos_funcion),self.argumentos_funcion.index(argumento)+1,self.H_tipo,self.tabla_actual.getNombre()) #+1 para controlar el caso de que no existan argumentos
+			if(len(self.argumentos_funcion)==0):#si la funcion no tiene argumentos
+				self.tabla_global.escrituraTablaArgumentos(None,0,0,self.H_tipo,self.tabla_actual.getNombre()) #+1 para controlar el caso de que no existan argumentos
+
+			else:
+				for argumento in self.argumentos_funcion:
+					self.tabla_global.escrituraTablaArgumentos(argumento,len(self.argumentos_funcion),self.argumentos_funcion.index(argumento)+1,self.H_tipo,self.tabla_actual.getNombre()) #+1 para controlar el caso de que no existan argumentos
 			self.argumentos_funcion=[]#reiniciamos para futuras funciones
 
 
@@ -372,7 +399,7 @@ class ASemantico:
 			elif(self.cola_gram.mostrarUltimo()=="A"):
 				print "he pasado por " + self.cola_gram.mostrarUltimo()
 
-				if(self.cola_tokens.mostrarPrimero().getId()=="parentesis_apertura"):
+				if(self.cola_tokens.mostrarPrimero().getId()=="parentesis_cierre"):
 					#lambda
 					self.cola_gram.desencolarUltimo()
 					self.parse.append("34")
@@ -645,7 +672,9 @@ class ASemantico:
 					self.fin = True
 					self.tabla_global.mostrarTabla()
 					self.tabla_actual.mostrarTabla()
-					self.tabla_funcion.mostrarTabla()
+					if (self.tabla_funcion!=None):
+						self.tabla_funcion.mostrarTabla()
+
 
 				
 				elif(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra() in ["break","if","print","prompt","return","switch","var"]):
@@ -772,8 +801,8 @@ class ASemantico:
 				elif(self.cola_tokens.mostrarPrimero().getId()=="pal_res" and self.cola_tokens.mostrarPrimero().getExtra()=="prompt"):
 					self.cola_gram.desencolarUltimo()
 					self.cola_gram.encolar(";")
-					self.cola_gram.encolar("SEM12")
 					self.cola_gram.encolar("(")
+					self.cola_gram.encolar("SEM12")
 					self.cola_gram.encolar("id")
 					self.cola_gram.encolar(")")
 					self.cola_gram.encolar("prompt")

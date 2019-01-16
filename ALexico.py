@@ -20,6 +20,8 @@ class ALexico:
 	en_funcion=False
 	n_funciones=0
 	num_linea=1
+	error=False
+
 	
 
 	
@@ -37,7 +39,7 @@ class ALexico:
 		limite=len(LectorArchivos.contenido)
 		contador=0
 		while contador<limite:
-			while (self.caracter!=None):
+			while (self.caracter!=None and self.error==False):
 				print self.caracter
 				#Interactuamos con el caracter actual, utilizamos ord() para obtener su valor en ASCII
 				#De momento, se consideran los espacios y saltos de linea IGNORABLES
@@ -153,6 +155,7 @@ class ALexico:
 					elif((ord(self.caracter)==10) or (ord(self.caracter)==3) or (ord(self.caracter)==32) or (ord(self.caracter)==9)): #Saltos de linea, fin de texto, tabulaciones...
 						pass
 					else:
+						self.error=True
 						print "error lexico en la linea " + str(self.num_linea) +": caracter no reconocible"
 						#Mensaje de error, puede que quede algun caracter pendiente
 
@@ -193,6 +196,7 @@ class ALexico:
 						self.estado_actual=0
 						
 					else:
+						self.error=True
 						print "error lexico en la linea " + str(self.num_linea) +": expresion no reconocible"
 						#Mensaje de error
 
@@ -208,6 +212,7 @@ class ALexico:
 						self.estado_actual=0
 						
 					else:
+						self.error=True
 						print "error lexico en la linea " + str(self.num_linea) +": expresion no reconocible"
 						#Mensaje de error
 
@@ -222,7 +227,7 @@ class ALexico:
 					if(ord(self.caracter)==42):
 						self.estado_actual=16
 					else:
-						
+						self.error=True
 						print "error lexico en la linea " + str(self.num_linea) +": expresion no reconocible"
 						#Mensaje de error
 
@@ -235,14 +240,15 @@ class ALexico:
 
 				elif(self.estado_actual==17):
 					if(ord(self.caracter)==47):
-						estado_actual=0
+						self.estado_actual=0
 					else:
-						estado_actual=16
+						self.estado_actual=16
 
 				elif(self.estado_actual==18):
 					if(ord(self.caracter)>=48 and ord(self.caracter)<=57):
 						self.valor=self.valor*10 + int(self.caracter)
 						if(self.valor>32767):
+							self.error=True
 							print "error lexico en la linea " + str(self.num_linea) +": expresion entera superior al valor maximo permitido"
 					else:
 						token=Token("entero",self.valor,self.num_linea)
